@@ -2,12 +2,16 @@
 
 import { addNewPostSchema } from "@/lib/schemas";
 import { User } from "@/lib/types";
-import { supabaseServer } from "@/utils/supabase/server";
-import { u } from "framer-motion/client";
 
-export const addNewPost = async (formData: FormData): Promise<object> => {
+import { v4 as uuidv4 } from "uuid";
+
+import { supabaseServer } from "@/utils/supabase/server";
+
+export const addNewPost = async (
+  formData: FormData,
+  filesFromUrls: Object[]
+): Promise<object> => {
   const supabase = await supabaseServer();
-  getUserData();
 
   const {
     title,
@@ -26,16 +30,21 @@ export const addNewPost = async (formData: FormData): Promise<object> => {
   // get the user data and insert a row in a car table
   const data: User = await getUserData();
   const { id } = data;
-  console.log(id);
+
+  //adding images to basket ( with foled of uuid) then returning them in an array
+  const uuid = uuidv4();
+  const fileUrls = await addImagesToStorage(filesFromUrls, uuid);
+
   const { error: insertError } = await supabase.from("cars").insert({
     title,
     description,
-    photos: ["photo1", "photo2"],
+    photos: fileUrls,
     location,
     phone,
     price,
     username,
     user_id: id,
+    id: uuid,
   });
   if (insertError) {
     console.log(insertError.message);
@@ -70,4 +79,24 @@ export const getUserData = async () => {
   }
   console.log(data[0]);
   return data[0];
+};
+
+export const addImagesToStorage = async (
+  filesFromUrls: Object[],
+  uuid: string
+) => {
+  const fileUrls = [];
+  const supabase = await supabaseServer();
+  for (const file of filesFromUrls) {
+    const fileName = file.name;
+    const filePath = `/${uuid}/${fileName}`;
+
+    const { data, error } = await supabase.storage
+      .from("car-images")
+      .upload(filePath, file);
+    fileUrls.push(
+      `https://dkymwtifvmfitldsozxr.supabase.co/storage/v1/object/public/${data?.fullPath}`
+    );
+  }
+  return fileUrls;
 };

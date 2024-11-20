@@ -1,25 +1,55 @@
 "use client";
 import React, { useState } from "react";
 import Image from "next/image";
-import { Cross, CrosshairIcon, CrossIcon, Trash2 } from "lucide-react";
+import { FolderUp, Trash2 } from "lucide-react";
+
+import { useImageStore } from "@/lib/store";
+import { Button } from "./ui/button";
 
 export default function PhotoDrop() {
-  const [imageUrls, setImageUrls] = useState<string[]>([]);
-  console.log(imageUrls);
+  const { imageUrls, setImageUrls, removeImageUrl } = useImageStore(); // Zustand hooks
+  const [filesLength, setFilesLength] = useState(0);
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
-    if (files) {
-      const filesArray = Array.from(files);
-      const newImageUrls = filesArray.map((file) => URL.createObjectURL(file));
-      console.log(newImageUrls);
+    if (!files) return;
 
-      setImageUrls([...imageUrls, ...newImageUrls]);
-    }
+    setFilesLength((prev) => prev + files.length);
+
+    const filesArray = Array.from(files);
+    const newImageUrls = filesArray.map((file) => URL.createObjectURL(file));
+
+    setImageUrls([...newImageUrls]);
+    console.log("Image Urls", imageUrls);
+    if (imageUrls.length > 8) {
+      console.log(imageUrls);
+      setImageUrls(imageUrls.slice(0, 8));
+    } // slice if >8 images
   };
 
   return (
     <div className="w-full min-h-[200px]">
-      <input type="file" multiple onChange={handleImageChange} />
+      <Button
+        type="button"
+        className="relative "
+        disabled={imageUrls.length >= 8}
+      >
+        Upload images <FolderUp />
+        <input
+          type="file"
+          multiple
+          onChange={handleImageChange}
+          required
+          onDragOver={(e) => e.preventDefault()}
+          onDrop={(e) => e.preventDefault()}
+          accept="image/png, image/jpg, image/jpeg"
+          className="opacity-0 z-10 absolute inset-0 cursor-pointer"
+          disabled={imageUrls.length >= 8}
+        />
+      </Button>
+      <p className="text-sm">
+        {" "}
+        <span className="text-slate-400"> (**png jpg jpeg) </span>
+      </p>
       <div className="flex gap-4 flex-wrap mt-4">
         {imageUrls.map((url, index) => (
           <div
@@ -30,10 +60,7 @@ export default function PhotoDrop() {
               <button
                 type="reset"
                 className="w-[28px] h-[28px] bg-red-500 z-10 absolute flex items-center justify-center right-0"
-                onClick={() => {
-                  const newImageUrls = imageUrls.filter((_, i) => i !== index);
-                  setImageUrls(newImageUrls);
-                }}
+                onClick={() => removeImageUrl(index)} // Remove from global store
               >
                 <Trash2 className=" text-black z-10 size-5" />
               </button>

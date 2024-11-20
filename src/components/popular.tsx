@@ -2,16 +2,8 @@
 import Image from "next/image";
 import React from "react";
 import { motion } from "framer-motion";
-import { supabaseClient } from "@/utils/supabase/client";
+
 export default function Popular() {
-  const getUserData = async () => {
-    const supabase = supabaseClient();
-    const { data, error } = await supabase.auth.getUser();
-
-    console.log(data, error);
-  };
-  getUserData();
-
   return (
     <section className="mb-20">
       <h1 className="py-10 text-2xl text-center px-5">

@@ -29,7 +29,6 @@ export default async function CarPage() {
     views,
   } = data[0];
 
-  console.log(photos);
   return (
     <section className="mt-5">
       <main className="grid grid-cols-12 grid-rows-12 md:grid-rows-12 w-screen h-[1800px] md:h-[1200px] gap-5">
