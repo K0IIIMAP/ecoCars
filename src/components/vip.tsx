@@ -4,7 +4,7 @@ import React from "react";
 
 export default function Vip() {
   return (
-    <section className="w-full py-10 bg-[#d8d8d8] text-body">
+    <section className="w-full py-10 bg-gray/50 text-body">
       <h2 className="mb-10 text-center  text-2xl">Featured Sales </h2>
 
       <section className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-6 px-10">

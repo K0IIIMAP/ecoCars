@@ -5,7 +5,12 @@ import Popular from "@/components/popular";
 
 import Vip from "@/components/vip";
 
-export default function Home() {
+import { getUserData } from "../actions";
+
+export default async function Home() {
+  console.log("data from action");
+  getUserData();
+
   return (
     <main>
       <Popular />

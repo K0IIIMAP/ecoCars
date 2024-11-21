@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 export default function SearchSection() {
   const [active, setIsActive] = useState<string | null>(null);
   return (
-    <section className="bg-gray w-full  h-[210px] flex items-center">
+    <section className="bg-gray/50 w-full  h-[210px] flex items-center">
       <div className="w-full  h-[60px] lg:h-[85px]  mx-[5%] flex  ">
         <input
           type="text"
