@@ -25,7 +25,7 @@ export type Database = {
           views: number
         }
         Insert: {
-          created_at: string
+          created_at?: string
           description: string
           featured?: boolean
           id?: string
@@ -64,31 +64,34 @@ export type Database = {
       }
       users: {
         Row: {
-          avatar_url: string | null
+          avatar_url: string
           created_at: string
           email: string
+          favourites: string[] | null
           id: string
           name: string | null
           phone: string | null
-          posts_left: number
+          post_tokens: number
         }
         Insert: {
-          avatar_url?: string | null
+          avatar_url?: string
           created_at?: string
           email: string
+          favourites?: string[] | null
           id: string
           name?: string | null
           phone?: string | null
-          posts_left: number
+          post_tokens: number
         }
         Update: {
-          avatar_url?: string | null
+          avatar_url?: string
           created_at?: string
           email?: string
+          favourites?: string[] | null
           id?: string
           name?: string | null
           phone?: string | null
-          posts_left?: number
+          post_tokens?: number
         }
         Relationships: []
       }

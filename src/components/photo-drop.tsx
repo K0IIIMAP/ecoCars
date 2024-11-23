@@ -36,7 +36,6 @@ export default function PhotoDrop() {
         Upload images <FolderUp />
         <input
           type="file"
-          multiple
           onChange={handleImageChange}
           required
           onDragOver={(e) => e.preventDefault()}
@@ -50,13 +49,13 @@ export default function PhotoDrop() {
         {" "}
         <span className="text-slate-400"> (**png jpg jpeg) </span>
       </p>
-      <div className="flex gap-4 flex-wrap mt-4">
+      <div className="flex gap-4 flex-wrap mt-4 ">
         {imageUrls.map((url, index) => (
           <div
             key={index}
             className="w-[150px] h-[150px] border border-gray-300 rounded overflow-hidden"
           >
-            <div className="relative w-full h-full">
+            <div className="relative w-full h-full ">
               <button
                 type="reset"
                 className="w-[28px] h-[28px] bg-red-500 z-10 absolute flex items-center justify-center right-0"

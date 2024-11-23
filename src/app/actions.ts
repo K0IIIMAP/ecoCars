@@ -66,7 +66,7 @@ export const getUserData = async () => {
   const supabase = await supabaseServer();
   const { data: authData, error: authError } = await supabase.auth.getUser();
   if (authError) {
-    console.log(authError.message);
+    console.log(authError);
     return;
   }
   const id = authData.user.id;

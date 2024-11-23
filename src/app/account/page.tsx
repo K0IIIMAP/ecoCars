@@ -1,44 +1,64 @@
 import Header from "@/components/header";
 
-import { Edit, Heart, ShoppingCart } from "lucide-react";
+import { Heart, ShoppingCart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
+import EditComponent from "@/components/edit-component";
+import { getUserData } from "../actions";
 import { supabaseServer } from "@/utils/supabase/server";
+import { formatDate, formatMonthYear } from "@/lib/utils";
 
 export default async function AccountPage() {
   const supabase = await supabaseServer();
-  const { data, error } = await supabase.auth.getUser();
-  console.log(data, error);
+  const user = await getUserData();
+
+  const { data: posts } = await supabase
+    .from("cars")
+    .select("*")
+    .eq("user_id", user.id);
 
   return (
     <main>
       <Header />
       <section className="w-full flex justify-center flex-col items-center relative">
-        <div className="w-[200px] h-[200px] relative ">
+        <div className="w-[200px] h-[200px] relative mt-5 ">
           <Image
-            src="https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png"
+            src={user?.avatar_url}
             alt="image"
             fill
-            className="rounded-full"
+            className=" w-full h-full rounded-full object-cover"
           />
-          <button className="absolute bottom-0 right-0">
-            <Edit />
-          </button>
+          <EditComponent />
         </div>
 
-        <h1 className="text-2xl mt-4">Kirill Amirov</h1>
-        <p className="text-xl mt-1">+390562342</p>
-        <p className="text-slate-400 text-sm mt-1">On Eco-Cars since 2019</p>
+        {user?.name ? (
+          <h1 className="text-2xl mt-4">{user.name}</h1>
+        ) : (
+          <h1>Name is not provided</h1>
+        )}
+        {user?.phone ? (
+          <p className="text-lg mt-1">{user.phone}</p>
+        ) : (
+          <p className="text-lg mt-1">Phone numbers is not provided</p>
+        )}
+        <p className="text-slate-400 text-sm mt-1">
+          On Eco-Cars since {formatMonthYear(user.created_at)}
+        </p>
         <p className="text-xl mt-1">
-          <span className="text-green-500 text-xl font-bold">10</span> active
-          posts
+          <span className="text-green-500 text-xl font-bold">
+            {posts?.length}
+          </span>{" "}
+          active posts
         </p>
         {/**Visible only for user itself */}
         <div className="flex flex-col items-center gap-y-2 mt-5">
           <p>
-            You have <span className="text-red-500 font-bold text-lg">3</span>{" "}
-            posts left
+            You have{" "}
+            <span className="text-red-500 font-bold text-lg">
+              {user?.post_tokens}
+            </span>{" "}
+            <span>post token</span>
           </p>
           <Link
             href="/"
@@ -48,9 +68,9 @@ export default async function AccountPage() {
           </Link>
         </div>
 
-        <section className="flex flex-col md:flex-row gap-5 w-full px-10 mt-10 ">
+        <section className="flex flex-col md:flex-row gap-5 w-full px-2 md:px-10 mt-10 ">
           <div className="flex-1 border border-black/30  rounded-lg py-5">
-            <p className="text-xl text-center">Posts of Kirill Amirov</p>
+            <p className="text-xl text-center">Posts</p>
             <div className="flex gap-5 flex-wrap mt-5 justify-center">
               <div className="bg-[#e0e0e0] flex flex-col rounded-[10px] w-[200px] ">
                 <div>

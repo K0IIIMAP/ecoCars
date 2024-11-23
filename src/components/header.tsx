@@ -18,8 +18,10 @@ export default function Header() {
       </Link>
 
       <nav className="flex items-center gap-10">
-        <Link href="/">My Profile</Link>
-        <Button className="sm:block hidden">Sell My Car</Button>
+        <Link href="/account">My Profile</Link>
+        <Link href="/adding">
+          <Button className="sm:block hidden">Sell My Car</Button>
+        </Link>
       </nav>
     </header>
   );

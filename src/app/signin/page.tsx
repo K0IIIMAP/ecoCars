@@ -7,10 +7,22 @@ import { supabaseClient } from "@/utils/supabase/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import { redirect } from "next/navigation";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 export default function SignInPage() {
+  useEffect(() => {
+    const checkUser = async () => {
+      const supabase = supabaseClient();
+      const { data, error } = await supabase.auth.getUser();
+      if (data.user) {
+        redirect("/adding");
+      }
+    };
+
+    checkUser();
+  }, []);
   const {
     register,
     formState: { errors, isSubmitting },
@@ -33,6 +45,18 @@ export default function SignInPage() {
 
   return (
     <main className="w-screen h-screen flex">
+      <button
+        onClick={async () => {
+          const supabase = supabaseClient();
+
+          const { data, error } = await supabase.auth.signInWithOAuth({
+            provider: "github",
+          });
+          console.log(data, error);
+        }}
+      >
+        Sign in with github
+      </button>
       <section className="flex-1 h-full flex items-center justify-center">
         <div className="w-full max-w-[405px] h-[638px] flex flex-col items-center justify-center px-4">
           <h1 className="mb-[78px] font-medium text-[32px]">Sign in</h1>

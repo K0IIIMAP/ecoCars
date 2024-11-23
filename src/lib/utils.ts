@@ -15,3 +15,74 @@ export async function convertBlobUrlToFile(blobUrl: string) {
   });
   return file;
 }
+
+export function formatDate(isoString: string) {
+  const date = new Date(isoString);
+
+  // Get the day of the week
+  const daysOfWeek = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
+  const dayOfWeek = daysOfWeek[date.getDay()];
+
+  // Get the month
+  const monthsOfYear = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  const month = monthsOfYear[date.getMonth()];
+
+  // Get the time in hours and minutes
+  const hours = date.getHours();
+  const minutes = date.getMinutes().toString().padStart(2, "0"); // Ensure 2 digits for minutes
+
+  // Construct the formatted string
+  const formatted = `${dayOfWeek}, ${month} ${date.getDate()}, ${hours}:${minutes}`;
+
+  return formatted;
+}
+
+export function formatMonthYear(isoString: string) {
+  const date = new Date(isoString);
+
+  // Get the month
+  const monthsOfYear = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  const month = monthsOfYear[date.getMonth()];
+
+  // Get the year
+  const year = date.getFullYear();
+
+  // Construct the formatted string
+  const formatted = `${month} ${year}`;
+
+  return formatted;
+}

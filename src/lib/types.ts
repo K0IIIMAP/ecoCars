@@ -1,11 +1,12 @@
 export type User = {
-  avatar_url: string | null;
+  avatar_url: string;
   created_at: string;
   email: string;
+  favourites: string[] | null;
   id: string;
   name: string | null;
   phone: string | null;
-  posts_left: number;
+  post_tokens: number;
 };
 
 export type Car = {
