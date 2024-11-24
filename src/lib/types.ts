@@ -15,11 +15,8 @@ export type Car = {
   featured: boolean;
   id: string;
   location: string;
-  phone: string;
   photos: string[];
   price: number;
   title: string;
   user_id: string;
-  username: string;
-  views: number;
 };

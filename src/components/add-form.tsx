@@ -2,7 +2,7 @@
 import React from "react";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
-import { addNewPost } from "@/app/actions";
+import { addNewPost, getUserData } from "@/app/actions";
 import PhotoDrop from "./photo-drop";
 
 import { useImageStore } from "@/lib/store";
@@ -12,6 +12,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { addNewPostSchema } from "@/lib/schemas";
 import { supabaseClient } from "@/utils/supabase/client";
+import { redirect } from "next/navigation";
+import { toast } from "sonner";
 
 export default function AddForm() {
   const { imageUrls, setImageUrls, removeImageUrl } = useImageStore(); // Zustand hooks
@@ -24,19 +26,30 @@ export default function AddForm() {
     resolver: zodResolver(addNewPostSchema),
   });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const formData = new FormData(e.target as HTMLFormElement);
-
+  const onSubmit = async (formData: FormData) => {
+    const user = await getUserData();
     const filesFromUrls = await Promise.all(
       imageUrls.map((url) => convertBlobUrlToFile(url))
     );
 
-    await addNewPost(formData, filesFromUrls);
+    const response = await addNewPost(formData, filesFromUrls);
+    if (response.success) {
+      toast.success("Congratulations!", {
+        className: "bg-green-500 text-white border-none",
+        description: "Your car has been successfully uploaded",
+      });
+      redirect(`/profile/${user.id}`);
+    }
+    if (response.error) {
+      toast.error("Error", {
+        className: "bg-red-500 text-white border-none",
+        description: "Unexpected error occured, please try again later",
+      });
+    }
   };
 
   return (
-    <form className="flex-col flex" onSubmit={handleSubmit}>
+    <form className="flex-col flex" onSubmit={handleSubmit(onSubmit)}>
       <fieldset className="space-y-2">
         <Label htmlFor="title" className="text-xl">
           Title
@@ -45,8 +58,11 @@ export default function AddForm() {
           id="title"
           placeholder="For example: Tesla model S Plaid 2021"
           className="mb-5"
-          name="title"
+          {...register("title")}
         />
+        {errors.title && (
+          <p className="text-red-500 text-lg ">{`${errors.title.message}`}</p>
+        )}
       </fieldset>
 
       <fieldset className="space-y-2 mt-5">
@@ -67,8 +83,11 @@ export default function AddForm() {
           placeholder="Describe all important details about your car (year,model,milage and so on)"
           className="block w-full outline-none p-5 resize-none rounded-lg mb-5"
           rows={15}
-          name="description"
+          {...register("description")}
         />{" "}
+        {errors.description && (
+          <p className="text-red-500 text-lg ">{`${errors.description.message}`}</p>
+        )}
       </fieldset>
 
       <div className="w-full md:w-[60%] mt-5">
@@ -80,8 +99,11 @@ export default function AddForm() {
             placeholder="For Example: 30000"
             id="price"
             type="number"
-            name="price"
+            {...register("price")}
           />
+          {errors.price && (
+            <p className="text-red-500 text-lg ">{`${errors.price.message}`}</p>
+          )}
         </fieldset>
         <fieldset className="space-y-2 mt-5">
           <Label htmlFor="location" className="text-xl">
@@ -90,12 +112,19 @@ export default function AddForm() {
           <Input
             placeholder="For Example: New York"
             id="location"
-            name="location"
+            {...register("location")}
           />
+          {errors.location && (
+            <p className="text-red-500 text-lg ">{`${errors.location.message}`}</p>
+          )}
         </fieldset>
       </div>
-      <Button type="submit" className="px-10 py-5 text-2xl mt-10 self-end">
-        Submit{" "}
+      <Button
+        disabled={isSubmitting}
+        type="submit"
+        className="px-10 py-5 text-2xl mt-10 self-end"
+      >
+        {isSubmitting ? "Submitting..." : "Submit"}
       </Button>
     </form>
   );

@@ -3,10 +3,17 @@ import Header from "@/components/header";
 import React from "react";
 
 import AddForm from "@/components/add-form";
+import { getUserData } from "../actions";
+
+import ClientSonnser from "@/components/client-sonner";
+import { redirect } from "next/navigation";
 
 export default async function AddingPage() {
+  const user = await getUserData();
+  if (user.error) redirect("signin");
   return (
     <main>
+      {/* {user.error && <ClientSonnser user={user} />} */}
       <Header />
 
       <div className="flex max-md:justify-center px-1">

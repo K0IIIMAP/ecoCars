@@ -16,13 +16,10 @@ export type Database = {
           featured: boolean
           id: string
           location: string
-          phone: string
           photos: string[]
           price: number
           title: string
           user_id: string
-          username: string
-          views: number
         }
         Insert: {
           created_at?: string
@@ -30,13 +27,10 @@ export type Database = {
           featured?: boolean
           id?: string
           location: string
-          phone: string
           photos: string[]
           price: number
-          title?: string
-          user_id?: string
-          username: string
-          views?: number
+          title: string
+          user_id: string
         }
         Update: {
           created_at?: string
@@ -44,17 +38,14 @@ export type Database = {
           featured?: boolean
           id?: string
           location?: string
-          phone?: string
           photos?: string[]
           price?: number
           title?: string
           user_id?: string
-          username?: string
-          views?: number
         }
         Relationships: [
           {
-            foreignKeyName: "car_user_id_fkey"
+            foreignKeyName: "cars_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "users"
@@ -64,7 +55,7 @@ export type Database = {
       }
       users: {
         Row: {
-          avatar_url: string
+          avatar_url: string | null
           created_at: string
           email: string
           favourites: string[] | null
@@ -74,17 +65,17 @@ export type Database = {
           post_tokens: number
         }
         Insert: {
-          avatar_url?: string
+          avatar_url?: string | null
           created_at?: string
           email: string
           favourites?: string[] | null
           id: string
           name?: string | null
           phone?: string | null
-          post_tokens: number
+          post_tokens?: number
         }
         Update: {
-          avatar_url?: string
+          avatar_url?: string | null
           created_at?: string
           email?: string
           favourites?: string[] | null

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Exo_2 } from "next/font/google";
 
 import "./globals.css";
+import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -20,6 +21,7 @@ export default function RootLayout({
     <html lang="en" className="overflow-x-clip">
       <body className={` ${font.className} overflow-x-clip bg-[#f0f0f0] `}>
         {children}
+        <Toaster />
       </body>
     </html>
   );

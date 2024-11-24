@@ -2,8 +2,11 @@ import Link from "next/link";
 import React from "react";
 import { Button } from "./ui/button";
 import Image from "next/image";
+import { getUserData } from "@/app/actions";
 
-export default function Header() {
+export default async function Header() {
+  const user = await getUserData();
+
   return (
     <header className="w-full h-[70px] flex justify-between items-center px-[5%] bg-white">
       <Link href="/" className="flex items-center text-2xl gap-3  text-logo">
@@ -18,7 +21,8 @@ export default function Header() {
       </Link>
 
       <nav className="flex items-center gap-10">
-        <Link href="/account">My Profile</Link>
+        {user && <Link href={`/profile/${user.id}`}>My Profile</Link>}
+        {!user && <Link href="/signup">Sign Up</Link>}
         <Link href="/adding">
           <Button className="sm:block hidden">Sell My Car</Button>
         </Link>

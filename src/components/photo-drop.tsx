@@ -5,12 +5,14 @@ import { FolderUp, Trash2 } from "lucide-react";
 
 import { useImageStore } from "@/lib/store";
 import { Button } from "./ui/button";
+import { FieldErrors, FieldValues, UseFormRegister } from "react-hook-form";
 
 export default function PhotoDrop() {
   const { imageUrls, setImageUrls, removeImageUrl } = useImageStore(); // Zustand hooks
   const [filesLength, setFilesLength] = useState(0);
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
+
     if (!files) return;
 
     setFilesLength((prev) => prev + files.length);
@@ -37,18 +39,19 @@ export default function PhotoDrop() {
         <input
           type="file"
           onChange={handleImageChange}
-          required
           onDragOver={(e) => e.preventDefault()}
           onDrop={(e) => e.preventDefault()}
           accept="image/png, image/jpg, image/jpeg"
           className="opacity-0 z-10 absolute inset-0 cursor-pointer"
           disabled={imageUrls.length >= 8}
+          required
         />
       </Button>
       <p className="text-sm">
         {" "}
         <span className="text-slate-400"> (**png jpg jpeg) </span>
       </p>
+
       <div className="flex gap-4 flex-wrap mt-4 ">
         {imageUrls.map((url, index) => (
           <div
