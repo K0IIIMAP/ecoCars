@@ -1,11 +1,12 @@
 "use server";
 
-import { addNewPostSchema } from "@/lib/schemas";
-import { User } from "@/lib/types";
+import { addNewPostSchema, Post } from "@/lib/schemas";
+import { Car, User } from "@/lib/types";
 
 import { v4 as uuidv4 } from "uuid";
 
 import { supabaseServer } from "@/utils/supabase/server";
+import { revalidatePath } from "next/cache";
 
 export const addNewPost = async (
   formData: FormData,
@@ -96,3 +97,41 @@ export const addImagesToStorage = async (
   }
   return fileUrls;
 };
+
+export async function editPost(formData: unknown, carId: string) {
+  console.log(formData, carId);
+
+  const supabase = await supabaseServer();
+  const post = formData;
+
+  const { error: zodError, data: validatedData } =
+    addNewPostSchema.safeParse(post);
+
+  if (zodError) {
+    const errorDetails = zodError?.errors.map((issue) => ({
+      field: issue.path[0], // Name of the field
+      message: issue.message, // Error message
+    }));
+    console.log(errorDetails);
+    return { error: errorDetails };
+  }
+  validatedData.price = parseInt(validatedData.price);
+  const { data: carData, error: carError } = await supabase
+    .from("cars")
+    .select("*")
+    .eq("id", carId);
+  if (carError) {
+    return { error: carError.message };
+  }
+  const { error, data } = await supabase
+    .from("cars")
+    .update(validatedData)
+    .eq("id", carId);
+  console.log(error, data);
+  if (error) {
+    return { error: error.message };
+  }
+  revalidatePath(`/car/${carId}`);
+
+  return { success: "Post updated successfully" };
+}

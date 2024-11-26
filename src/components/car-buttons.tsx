@@ -7,30 +7,29 @@ import { User } from "@/lib/types";
 import { toast } from "sonner";
 
 import { supabaseClient } from "@/utils/supabase/client";
-import { revalidatePath } from "next/cache";
 
-export default function CarButtons({ carId }: { carId: string }) {
+export default function CarButtons({
+  carId,
+  carIsFavoured,
+}: {
+  carId: string;
+  carIsFavoured: boolean;
+}) {
   const [isPending, startTransition] = useTransition();
-  const [user, setUser] = useState<User | { error: string } | null>(null);
-  const [isFavoured, setIsFavoured] = useState(false);
-  useEffect(() => {
-    const getUserAndFavourites = async () => {
-      const user = await getUserData();
-      setUser(user);
-      const favouritesIds = user?.favourites ?? [];
 
-      if (favouritesIds.includes(carId)) {
-        setIsFavoured(true);
-      }
-    };
-
-    getUserAndFavourites();
-  }, []);
+  const [isFavoured, setIsFavoured] = useState(carIsFavoured);
 
   return (
     <>
       {" "}
-      <Button className="w-full text-lg mt-auto">Message a seller</Button>
+      <Button
+        className="w-full text-lg mt-auto"
+        onClick={() => {
+          toast.warning("This feature is not available yet");
+        }}
+      >
+        Message a seller
+      </Button>
       {!isFavoured ? (
         <Button
           variant="secondary"
@@ -38,6 +37,7 @@ export default function CarButtons({ carId }: { carId: string }) {
           className="w-full text-lg mt-3 bg-logo text-white hover:bg-logo/90"
           onClick={() => {
             startTransition(async () => {
+              const user = await getUserData();
               if (user && "error" in user) {
                 toast.error("Log in to add to favourites", {
                   className: "bg-red-500 text-white border-none",
@@ -77,33 +77,37 @@ export default function CarButtons({ carId }: { carId: string }) {
       ) : (
         <Button
           variant="destructive"
-          onClick={async () => {
-            const user = await getUserData();
+          onClick={() => {
+            startTransition(async () => {
+              const user = await getUserData();
 
-            // make a check if user is typeof user
-            if (!user?.id) {
-              toast.error("Log in to remove from favourites", {
+              // make a check if user is typeof user
+              if (!user?.id) {
+                toast.error("Log in to remove from favourites", {
+                  className: "bg-red-500 text-white border-none",
+                });
+                return;
+              }
+
+              const supabase = supabaseClient();
+              const newFavourites = user?.favourites.filter(
+                (id) => id !== carId
+              );
+              console.log(newFavourites);
+
+              await supabase
+                .from("users")
+                .update({ favourites: newFavourites })
+                .eq("id", user?.id);
+              toast.success("Removed from favourites", {
                 className: "bg-red-500 text-white border-none",
               });
-              return;
-            }
 
-            const supabase = supabaseClient();
-            const newFavourites = user?.favourites.filter((id) => id !== carId);
-            console.log(newFavourites);
-
-            await supabase
-              .from("users")
-              .update({ favourites: newFavourites })
-              .eq("id", user?.id);
-            toast.success("Removed from favourites", {
-              className: "bg-[#ffa500] text-white border-none",
+              setIsFavoured(false);
             });
-
-            setIsFavoured(false);
           }}
           disabled={isPending}
-          className="w-full text-lg mt-3 text-white"
+          className="w-full text-lg mt-3 text-white whitespace-normal leading-5 "
         >
           Remove from favourites
         </Button>

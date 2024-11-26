@@ -10,8 +10,10 @@ export default function SignOutBtn() {
       <Button
         onClick={async () => {
           const supabase = supabaseClient();
-          const { error } = await supabase.auth.signOut({});
-          console.log(error);
+          const { error } = await supabase.auth.signOut();
+          if (error) {
+            return;
+          }
           redirect("/");
         }}
         variant="destructive"

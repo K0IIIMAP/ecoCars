@@ -7,7 +7,6 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
 
 import { supabaseServer } from "@/utils/supabase/server";
 import Header from "@/components/header";
@@ -16,6 +15,10 @@ import { formatDate, formatMonthYear, formatPrice } from "@/lib/utils";
 import { Car } from "@/lib/types";
 import Link from "next/link";
 import CarButtons from "@/components/car-buttons";
+import { getUserData } from "@/app/actions";
+import { notFound } from "next/navigation";
+
+import CarProfileBtns from "@/components/car-profile-btns";
 
 export default async function CarPage({
   params,
@@ -24,17 +27,19 @@ export default async function CarPage({
 }) {
   const { carId } = await params;
 
-  const supabase = await supabaseServer();
+  const user = await getUserData();
+  const favouredIds = user.favourites;
+  const carIsFavoured = favouredIds?.includes(carId);
 
+  const supabase = await supabaseServer();
   const { data, error } = await supabase
     .from("cars")
     .select("*")
     .eq("id", carId)
     .single();
-  if (error) {
-    console.log(error.message);
-    return;
-  }
+  if (error) notFound();
+  const userId = user?.id;
+  const isMyCar = userId === data.user_id;
 
   const car: Car = data;
   const { created_at, description, photos, price, title, user_id } = car;
@@ -43,7 +48,7 @@ export default async function CarPage({
     .select("*")
     .eq("id", user_id)
     .single();
-
+  if (creatorError) notFound();
   return (
     <>
       <Header />
@@ -81,9 +86,10 @@ export default async function CarPage({
                 <p className="text-[30px] font-semibold">
                   ${formatPrice(price)}
                 </p>
+                <p className="text-base">{car.location}</p>
               </div>
 
-              <CarButtons carId={carId} />
+              <CarButtons carId={carId} carIsFavoured={carIsFavoured} />
             </div>
           </section>
           <section className="bg-white rounded-xl row-start-8 row-span-2 col-start-2 col-span-10 md:row-span-4 md:row-start-5 md:col-span-3 md:col-start-9">
@@ -97,7 +103,7 @@ export default async function CarPage({
                     className="rounded-full object-cover"
                   />{" "}
                 </div>
-                <div>
+                <div className="flex flex-col items-center">
                   <p className="text-[25px] text-center">
                     {" "}
                     {creatorData?.name ? (
@@ -106,18 +112,28 @@ export default async function CarPage({
                       <span>User</span>
                     )}
                   </p>
-                  <p className="text-black/50">
+                  <p className="text-black/50 text-center">
                     User since {formatMonthYear(creatorData.created_at)}
                   </p>
                   {/* <p>Last online:yesterday 22:36</p> */}
                   <Link
                     href={`/profile/${creatorData.id}`}
-                    className="text-blue-500 underline"
+                    className="text-blue-500 underline text-center"
                   >
                     View all sales
-                    {creatorData.name && <span> of {creatorData?.name}</span>}
+                    {creatorData.name ? (
+                      <span> of {creatorData?.name}</span>
+                    ) : (
+                      <span> of User</span>
+                    )}
                   </Link>
                 </div>
+
+                {isMyCar && (
+                  <div className="w-full flex flex-col gap-3 px-5">
+                    <CarProfileBtns carId={carId} userId={userId} car={car} />
+                  </div>
+                )}
               </div>
             </div>
           </section>

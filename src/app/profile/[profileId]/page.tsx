@@ -25,7 +25,9 @@ export default async function AccountPage({
   const userId = userBySession.id;
   const isMyProfile = userId == profileId;
 
-  const favouritesIds = userBySession.favourites;
+  // empty array in case if user not logged in, we dont have to show no favourites
+  const favouritesIds = userBySession.favourites ?? [];
+
   const favourites = await Promise.all(
     favouritesIds.map(async (id: string) => {
       const { data: carData, error } = await supabase
@@ -115,50 +117,11 @@ export default async function AccountPage({
         <section className="flex flex-col md:flex-row gap-5 w-full px-2 md:px-10 mt-10 my-10">
           <div className="flex-1 border border-black/30  rounded-lg py-5">
             <p className="text-xl text-center">Posts</p>
-            <div className="flex gap-5 flex-wrap mt-5 justify-start px-2">
-              {posts.map((post) => (
-                <div
-                  key={post.id}
-                  className="bg-[#e0e0e0] flex flex-col rounded-[10px] w-[200px] "
-                >
-                  <div className="h-[150px] relative">
-                    <Link href={`/car/${post.id}`}>
-                      <Image
-                        src={post.photos[0]}
-                        fill
-                        alt="car"
-                        className="w-full rounded-t-[10px] h-full object-cover  "
-                      />
-                    </Link>
-                  </div>
-                  <div className="p-3 flex flex-col ">
-                    <p className="leading-[20px] text-sm max-w-[180px] text-ellipsis whitespace-nowrap overflow-hidden">
-                      {post.title}
-                    </p>
-                    <p className="text-base font-bold py-2">$45 000</p>
-                    <p className="text-[11px]">{post.location}</p>
-                    <p className="text-[11px]  ">
-                      {new Date(post.created_at).toLocaleString("en-US", {
-                        month: "long", // full name of the month (e.g., "January")
-                        day: "numeric", // day of the month as a number (e.g., "1")
-                        year: "numeric", // full year as a number (e.g., "2024")
-                      })}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-          {isMyProfile && (
-            <div className="flex-1  border border-black/30 rounded-lg py-5 ">
-              <p className="text-xl text-center flex  items-center gap-2 justify-self-center ">
-                Your Favourites{" "}
-                <Heart size={20} className="border-black" fill="red" />
-              </p>
+            {posts.length > 0 ? (
               <div className="flex gap-5 flex-wrap mt-5 justify-start px-2">
-                {favourites.map((post: Car, index: number) => (
+                {posts.map((post) => (
                   <div
-                    key={index}
+                    key={post.id}
                     className="bg-[#e0e0e0] flex flex-col rounded-[10px] w-[200px] "
                   >
                     <div className="h-[150px] relative">
@@ -167,7 +130,7 @@ export default async function AccountPage({
                           src={post.photos[0]}
                           fill
                           alt="car"
-                          className="w-[100%] object-cover rounded-t-[10px] "
+                          className="w-full rounded-t-[10px] h-full object-cover  "
                         />
                       </Link>
                     </div>
@@ -190,6 +153,58 @@ export default async function AccountPage({
                   </div>
                 ))}
               </div>
+            ) : (
+              <h1 className="text-lg md:text-2xl mt-5 text-center">No posts</h1>
+            )}
+          </div>
+
+          {isMyProfile && (
+            <div className="flex-1  border border-black/30 rounded-lg py-5 ">
+              <p className="text-xl text-center flex  items-center gap-2 justify-self-center ">
+                Your Favourites{" "}
+                <Heart size={20} className="border-black" fill="red" />
+              </p>
+              {favourites.length > 0 ? (
+                <div className="flex gap-5 flex-wrap mt-5 justify-start px-2">
+                  {favourites.map((post: Car, index: number) => (
+                    <div
+                      key={index}
+                      className="bg-[#e0e0e0] flex flex-col rounded-[10px] w-[200px] "
+                    >
+                      <div className="h-[150px] relative">
+                        <Link href={`/car/${post.id}`}>
+                          <Image
+                            src={post.photos[0]}
+                            fill
+                            alt="car"
+                            className="w-[100%] object-cover rounded-t-[10px] "
+                          />
+                        </Link>
+                      </div>
+                      <div className="p-3 flex flex-col ">
+                        <p className="leading-[20px] text-sm max-w-[180px] text-ellipsis whitespace-nowrap overflow-hidden">
+                          {post.title}
+                        </p>
+                        <p className="text-base font-bold py-2">
+                          ${formatPrice(post.price)}
+                        </p>
+                        <p className="text-[11px]">{post.location}</p>
+                        <p className="text-[11px]  ">
+                          {new Date(post.created_at).toLocaleString("en-US", {
+                            month: "long", // full name of the month (e.g., "January")
+                            day: "numeric", // day of the month as a number (e.g., "1")
+                            year: "numeric", // full year as a number (e.g., "2024")
+                          })}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <h1 className="text-center text-lg md:text-2xl mt-5">
+                  No favoured cars
+                </h1>
+              )}
             </div>
           )}
         </section>

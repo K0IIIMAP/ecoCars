@@ -21,8 +21,10 @@ export default async function Header() {
       </Link>
 
       <nav className="flex items-center gap-10">
-        {user && <Link href={`/profile/${user.id}`}>My Profile</Link>}
-        {!user && <Link href="/signup">Sign Up</Link>}
+        <Link href={!user?.error ? `/profile/${user.id}` : "/signup"}>
+          My Profile
+        </Link>
+
         <Link href="/adding">
           <Button className="sm:block hidden">Sell My Car</Button>
         </Link>
