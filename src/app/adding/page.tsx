@@ -5,14 +5,17 @@ import React from "react";
 import AddForm from "@/components/add-form";
 import { getUserData } from "../actions";
 
-import ClientSonnser from "@/components/client-sonner";
 import { redirect } from "next/navigation";
+import TokenAlert from "@/components/token-alert";
 
 export default async function AddingPage() {
   const user = await getUserData();
   if (user.error) redirect("signin");
+  console.log(user.post_tokens);
+
   return (
     <main>
+      <TokenAlert user={user} />
       {/* {user.error && <ClientSonnser user={user} />} */}
       <Header />
 

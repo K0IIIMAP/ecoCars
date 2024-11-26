@@ -19,6 +19,7 @@ import { getUserData } from "@/app/actions";
 import { notFound } from "next/navigation";
 
 import CarProfileBtns from "@/components/car-profile-btns";
+import { Crown } from "lucide-react";
 
 export default async function CarPage({
   params,
@@ -78,7 +79,13 @@ export default async function CarPage({
             <h1 className="py-3 text-xl font-semibold">Description</h1>
             <p>{description}</p>
           </section>
-          <section className="bg-white rounded-xl row-start-6 row-span-2 col-start-2 col-span-10 md:col-span-3 md:row-span-4 md:col-start-9 md:row-start-1 px-5 py-7">
+          <section className="relative bg-white rounded-xl row-start-6 row-span-2 col-start-2 col-span-10 md:col-span-3 md:row-span-4 md:col-start-9 md:row-start-1 px-5 py-7">
+            {car.featured && (
+              <div className="bg-[#6a13cf] text-white w-fit absolute top-0 right-0 px-5 py-2 rounded-tr-xl rounded-bl-xl text-sm">
+                <span className="relative">FEATURED</span>
+                <Crown className="absolute top-0 z-10 right-[12px] size-3.5 rotate-[30deg]" />
+              </div>
+            )}
             <div className="flex flex-col h-full ">
               <div className="space-y-1">
                 <p className="text-[12px]">{formatDate(created_at)}</p>
@@ -118,7 +125,7 @@ export default async function CarPage({
                   {/* <p>Last online:yesterday 22:36</p> */}
                   <Link
                     href={`/profile/${creatorData.id}`}
-                    className="text-blue-500 underline text-center"
+                    className="text-blue-500 underline text-center mb-3"
                   >
                     View all sales
                     {creatorData.name ? (

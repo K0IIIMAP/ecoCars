@@ -6,8 +6,15 @@ import { redirect } from "next/navigation";
 import React, { useTransition } from "react";
 import { toast } from "sonner";
 import { Button } from "./ui/button";
+import { cn } from "@/lib/utils";
 
-export default function BuyPostsBtn({ userId }: { userId: string }) {
+export default function BuyPostsBtn({
+  userId,
+  className,
+}: {
+  userId: string;
+  className?: string;
+}) {
   const [isPending, startTransition] = useTransition();
   return (
     <Button
@@ -24,7 +31,9 @@ export default function BuyPostsBtn({ userId }: { userId: string }) {
         });
       }}
       disabled={isPending}
-      className="text-base px-5 py-2 bg-[#1e9f31] hover:bg-[#1e9f31]/90 transition rounded-full text-white flex items-center gap-2 "
+      className={cn(
+        `text-base px-5 py-2 bg-[#1e9f31] hover:bg-[#1e9f31]/90 transition rounded-full text-white flex items-center gap-2 ${className}`
+      )}
     >
       Buy more posts <ShoppingCart size={20} />
     </Button>

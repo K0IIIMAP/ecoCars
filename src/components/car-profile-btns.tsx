@@ -30,7 +30,7 @@ export default function CarProfileBtns({
 
   return (
     <>
-      <MakeFeaturedBtn userId={userId} carId={carId} />
+      {!car.featured && <MakeFeaturedBtn userId={userId} carId={carId} />}
       <EditCarBtn car={car} carId={carId} />
       <Dialog>
         <DialogTrigger asChild>

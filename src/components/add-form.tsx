@@ -11,7 +11,7 @@ import { convertBlobUrlToFile } from "@/lib/utils";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { addNewPostSchema } from "@/lib/schemas";
-import { supabaseClient } from "@/utils/supabase/client";
+
 import { redirect } from "next/navigation";
 import { toast } from "sonner";
 
@@ -28,6 +28,14 @@ export default function AddForm() {
 
   const onSubmit = async (formData: FormData) => {
     const user = await getUserData();
+    if (user.post_tokens === 0) {
+      toast.error("Error", {
+        className: "bg-red-500 text-white border-none",
+        description:
+          "Not enough tokens. Please buy more tokens in order to post your car.",
+      });
+      return;
+    }
     const filesFromUrls = await Promise.all(
       imageUrls.map((url) => convertBlobUrlToFile(url))
     );

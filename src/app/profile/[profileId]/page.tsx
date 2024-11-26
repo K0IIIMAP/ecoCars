@@ -1,6 +1,6 @@
 import Header from "@/components/header";
 
-import { Heart, ShoppingCart } from "lucide-react";
+import { Crown, Heart, ShoppingCart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -118,7 +118,7 @@ export default async function AccountPage({
                 {posts.map((post) => (
                   <div
                     key={post.id}
-                    className="bg-[#e0e0e0] flex flex-col rounded-[10px] w-[200px] "
+                    className="bg-[#e0e0e0] flex flex-col rounded-[10px] w-[200px] relative "
                   >
                     <div className="h-[150px] relative">
                       <Link href={`/car/${post.id}`}>
@@ -146,6 +146,12 @@ export default async function AccountPage({
                         })}
                       </p>
                     </div>
+                    {post.featured && (
+                      <div className="bg-[#6a13cf] text-white w-fit absolute bottom-0 right-0 px-3 py-1 rounded-br-lg rounded-tl-lg text-[10px]">
+                        <span className="relative">FEATURED</span>
+                        <Crown className="absolute top-0 z-10 right-[3px] size-2.5 rotate-[30deg]" />
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
@@ -165,7 +171,7 @@ export default async function AccountPage({
                   {favourites.map((post: Car, index: number) => (
                     <div
                       key={index}
-                      className="bg-[#e0e0e0] flex flex-col rounded-[10px] w-[200px] "
+                      className="bg-[#e0e0e0] flex flex-col rounded-[10px] w-[200px] relative"
                     >
                       <div className="h-[150px] relative">
                         <Link href={`/car/${post.id}`}>
@@ -193,6 +199,12 @@ export default async function AccountPage({
                           })}
                         </p>
                       </div>
+                      {post.featured && (
+                        <div className="bg-[#6a13cf] text-white w-fit absolute bottom-0 right-0 px-3 py-1 rounded-br-lg rounded-tl-lg text-[10px]">
+                          <span className="relative">FEATURED</span>
+                          <Crown className="absolute top-0 z-10 right-[3px] size-2.5 rotate-[30deg]" />
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>

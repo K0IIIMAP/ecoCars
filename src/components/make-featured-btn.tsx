@@ -29,7 +29,7 @@ export default function MakeFeaturedBtn({
         });
       }}
       disabled={isPending}
-      className="w-full text-lg mt-3"
+      className="w-full text-lg"
     >
       Promote
     </Button>
