@@ -7,6 +7,7 @@ import { v4 as uuidv4 } from "uuid";
 
 import { supabaseServer } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
+import { stripe } from "@/lib/stripe";
 
 export const addNewPost = async (
   formData: FormData,
@@ -135,3 +136,50 @@ export async function editPost(formData: unknown, carId: string) {
 
   return { success: "Post updated successfully" };
 }
+
+export const makeFeatured = async ({
+  userId,
+  carId,
+}: {
+  userId: string;
+  carId: string;
+}) => {
+  const { url } = await stripe.checkout.sessions.create({
+    payment_method_types: ["card"],
+    line_items: [
+      {
+        price: "price_1QPLadIuuICPai1tavIUgaU6",
+        quantity: 1,
+      },
+    ],
+    metadata: {
+      userId,
+      carId,
+      productName: "Featured post",
+    },
+    mode: "payment",
+    success_url: `${process.env.NEXT_PUBLIC_URL}`,
+    cancel_url: `${process.env.NEXT_PUBLIC_URL}`,
+  });
+  return url;
+};
+
+export const buyPosts = async ({ userId }: { userId: string }) => {
+  const { url } = await stripe.checkout.sessions.create({
+    payment_method_types: ["card"],
+    line_items: [
+      {
+        price: "price_1QPOLmIuuICPai1tsjK2jVvr",
+        quantity: 1,
+      },
+    ],
+    metadata: {
+      userId,
+      productName: "Posts",
+    },
+    mode: "payment",
+    success_url: `${process.env.NEXT_PUBLIC_URL}/profile/${userId}`,
+    cancel_url: `${process.env.NEXT_PUBLIC_URL}/profile/${userId}`,
+  });
+  return url;
+};

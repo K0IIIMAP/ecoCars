@@ -12,6 +12,7 @@ import { Car, User } from "@/lib/types";
 
 import SignOutBtn from "@/components/sign-out-btn";
 import { notFound, redirect } from "next/navigation";
+import BuyPostsBtn from "@/components/buy-posts-btn";
 
 export default async function AccountPage({
   params,
@@ -104,12 +105,7 @@ export default async function AccountPage({
               </span>{" "}
               <span>post token</span>
             </p>
-            <Link
-              href="/"
-              className="px-5 py-2 bg-[#1e9f31] hover:bg-[#1e9f31]/90 transition rounded-full text-white flex items-center gap-2 "
-            >
-              Buy more posts <ShoppingCart size={20} />
-            </Link>
+            <BuyPostsBtn userId={userId} />
             <SignOutBtn />
           </div>
         )}

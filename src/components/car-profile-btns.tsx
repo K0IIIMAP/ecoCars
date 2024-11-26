@@ -15,6 +15,7 @@ import { toast } from "sonner";
 import { Car } from "@/lib/types";
 
 import EditCarBtn from "./ui/edit-car-btn";
+import MakeFeaturedBtn from "./make-featured-btn";
 
 export default function CarProfileBtns({
   carId,
@@ -29,6 +30,7 @@ export default function CarProfileBtns({
 
   return (
     <>
+      <MakeFeaturedBtn userId={userId} carId={carId} />
       <EditCarBtn car={car} carId={carId} />
       <Dialog>
         <DialogTrigger asChild>

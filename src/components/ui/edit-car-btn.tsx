@@ -56,7 +56,7 @@ export default function EditCarBtn({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="w-full text-lg mt-5">Edit a post</Button>
+        <Button className="w-full text-lg ">Edit post</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[1005px]">
         <form onSubmit={handleSubmit(onSubmit)}>
