@@ -158,8 +158,8 @@ export const makeFeatured = async ({
       productName: "Featured post",
     },
     mode: "payment",
-    success_url: `${process.env.NEXT_PUBLIC_URL}`,
-    cancel_url: `${process.env.NEXT_PUBLIC_URL}`,
+    success_url: `${process.env.NEXT_PUBLIC_URL}/car/${carId}`,
+    cancel_url: `${process.env.NEXT_PUBLIC_URL}/car/${carId}`,
   });
   return url;
 };
