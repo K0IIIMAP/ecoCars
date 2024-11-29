@@ -7,6 +7,11 @@ import { getUserData } from "../actions";
 
 import { redirect } from "next/navigation";
 import TokenAlert from "@/components/token-alert";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Add your car",
+};
 
 export default async function AddingPage() {
   const user = await getUserData();

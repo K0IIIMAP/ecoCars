@@ -5,7 +5,11 @@ import Image from "next/image";
 import React from "react";
 import { getUserData } from "../actions";
 import { redirect } from "next/navigation";
+import { Metadata } from "next";
 
+export const metadata: Metadata = {
+  title: "Get Started",
+};
 export default async function SignUpPage() {
   const user = await getUserData();
   if (!user.error) {

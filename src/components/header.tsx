@@ -9,7 +9,10 @@ export default async function Header() {
 
   return (
     <header className="w-full h-[70px] flex justify-between items-center px-[5%] bg-white">
-      <Link href="/" className="flex items-center text-2xl gap-3  text-logo">
+      <Link
+        href="/"
+        className="flex items-center text-2xl gap-3  text-logo max-sm:scale-[0.85]"
+      >
         <Image
           src="/ecocars.png"
           width={60}

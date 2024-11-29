@@ -16,14 +16,14 @@ export default function Footer() {
       <div className="mt-5">
         <p>You can find us on:</p>
         <div className="flex gap-5 items-center justify-center mt-2">
-          <Link href="/">
+          <Link href="https://wa.me/0965360759">
             <Instagram />
           </Link>
-          <Link href="/">
+          <Link href="https://wa.me/0965360759">
             <Twitter />
           </Link>
 
-          <Link href="/">
+          <Link href="https://wa.me/0965360759">
             <Youtube />
           </Link>
         </div>

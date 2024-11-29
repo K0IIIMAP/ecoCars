@@ -16,11 +16,11 @@ import { Label } from "@/components/ui/label";
 import { supabaseClient } from "@/utils/supabase/client";
 import { getUserData } from "@/app/actions";
 import { User } from "@/lib/types";
-import { revalidatePath } from "next/cache";
 
 export default function EditComponent() {
   const [username, setUsername] = useState("");
   const [phone, setPhone] = useState<string>("");
+  const [isPending, setIsPending] = useState(false);
   useEffect(() => {
     const someFunction = async () => {
       const supabase = supabaseClient();
@@ -69,7 +69,7 @@ export default function EditComponent() {
         const { data, error } = await supabase.storage
           .from("avatars")
           .upload(`${id}`, image);
-        console.log(data);
+
         const imgUrl = `https://gnavmfegxthvlkzwlhdf.supabase.co/storage/v1/object/public/${data?.fullPath}`;
         return imgUrl;
       } catch (error) {
@@ -90,6 +90,7 @@ export default function EditComponent() {
           <DialogTitle>Edit profile</DialogTitle>
           <DialogDescription>
             Make changes to your profile here. Click save when you&apos;re done.
+            (changing of image might take some time)
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
@@ -135,7 +136,9 @@ export default function EditComponent() {
         <DialogFooter>
           <Button
             type="button"
+            disabled={isPending}
             onClick={async () => {
+              setIsPending(true);
               const supabase = supabaseClient();
               const { data: authData } = await supabase.auth.getUser();
               if (!authData.user) return;
@@ -148,6 +151,7 @@ export default function EditComponent() {
                 .update({ name: username, phone, avatar_url: imageUrl })
                 .eq("id", id);
               location.reload();
+              setIsPending(false);
             }}
           >
             Save changes

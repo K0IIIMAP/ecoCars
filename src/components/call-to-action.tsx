@@ -1,5 +1,6 @@
 import React from "react";
 import { Button } from "./ui/button";
+import Link from "next/link";
 
 export default function CallToAction() {
   return (
@@ -13,13 +14,13 @@ export default function CallToAction() {
           variant="secondary"
           className="w-[45%] sm:w-[40%] lg:w-[20%]  h-[30%] sm:h-[50%] text-[12px] sm:text-xl bg-gray "
         >
-          VIEW ALL SALES
+          <Link href="/cars"> VIEW ALL SALES</Link>
         </Button>
         <Button
           variant="secondary"
           className="w-[45%]  sm:w-[40%] lg:w-[20%]   h-[30%] sm:h-[50%]  text-[12px] sm:text-xl bg-gray "
         >
-          SELL YOUR CAR
+          <Link href="/adding"> SELL YOUR CAR</Link>
         </Button>
       </div>
     </section>

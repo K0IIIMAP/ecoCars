@@ -7,13 +7,17 @@ import Link from "next/link";
 import EditComponent from "@/components/edit-component";
 import { getUserData } from "../../actions";
 import { supabaseServer } from "@/utils/supabase/server";
-import { cn, formatMonthYear, formatPrice } from "@/lib/utils";
+import { formatMonthYear, formatPrice } from "@/lib/utils";
 import { Car, User } from "@/lib/types";
 
 import SignOutBtn from "@/components/sign-out-btn";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import BuyPostsBtn from "@/components/buy-posts-btn";
+import { Metadata } from "next";
 
+export const metadata: Metadata = {
+  title: "Profile",
+};
 export default async function AccountPage({
   params,
 }: {
