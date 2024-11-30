@@ -136,6 +136,9 @@ export default function SignUpForm() {
             const supabase = supabaseClient();
             await supabase.auth.signInWithOAuth({
               provider: "google",
+              options: {
+                redirectTo: `${process.env.NEXT_PUBLIC_URL}/auth/callback`,
+              },
             });
           }}
         >

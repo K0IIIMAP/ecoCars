@@ -105,6 +105,9 @@ export default function SignInForm() {
           const supabase = supabaseClient();
           supabase.auth.signInWithOAuth({
             provider: "google",
+            options: {
+              redirectTo: `${process.env.NEXT_PUBLIC_URL}/auth/callback`,
+            },
           });
         }}
         className="w-[95%]  mt-10 rounded-xl border border-black/60 hover:bg-white/60 flex items-center justify-center gap-2"
